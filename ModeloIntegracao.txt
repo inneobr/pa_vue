@@ -1,0 +1,36 @@
+#FORM LISTAR
+
+import IntegracaoService from '../../service/IntegracaoService';
+
+integration: {},
+
+this.getIntegrationOptons();
+
+            getIntegrationOptons(){
+                const paginaAtual = "NATUREZA_TRIBURARIA";
+                IntegracaoService.getIntegrationOptions(paginaAtual)
+                    .then(({ data }) => {
+                        if(data) {
+                            this.integration = data;
+                        }
+                    })
+                    .catch(error => {
+                        this.$toast.add({
+                            severity:'info', 
+                            summary: 'PARÂMETROS DE PÁGINA NÂO DEFINIDOS', 
+                            detail:'Você deve cadastrar os parâmetros para esta página no menu lateral em item: Parâmetros de Integração.',
+                            life: 10000
+                        });
+                    });
+            },
+
+#FORM CADASTRO
+                getIntegrationOptons(){
+                    const paginaAtual = "NATUREZA_TRIBURARIA";
+                    IntegracaoService.getIntegrationOptions(paginaAtual)
+                        .then(({ data }) => {
+                            if(data) {
+                                this.integration = data;
+                            }
+                        })
+                },

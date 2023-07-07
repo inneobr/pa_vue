@@ -1,0 +1,121 @@
+image: node:16.18.1
+
+stages:
+- debug
+- build
+- publish
+- test
+- dast
+- deploy
+
+npm:
+  stage: build
+  script:
+  - npm install --legacy-peer-deps
+  - npm run build:$CI_COMMIT_BRANCH
+  artifacts:
+    name: "$CI_JOB_NAME"
+    when: on_success
+    paths:
+    - dist/*
+    expire_in: 1 day
+  only:
+    - master
+    - development
+    - staging
+  except:
+    - tags
+
+publish-image:
+  stage: publish
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: ['']
+  before_script:
+    - PACKAGE_VERSION=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)
+  script:
+    - echo "Publish image to Container Registry"
+    - cat $DOCKER_AUTH_CONFIG > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context "."
+      --dockerfile "Dockerfile"
+      --destination "sa-saopaulo-1.ocir.io/grj9gtpq5dke/genesis-vue:${CI_COMMIT_BRANCH}-${CI_PIPELINE_ID}"
+  only:
+    - master
+    - development
+    - staging
+
+deploy-development:
+  stage: deploy
+  image:
+#    name: bitnami/kubectl:latest 
+    name: sa-saopaulo-1.ocir.io/grj9gtpq5dke/kubernetes-deploy:v1
+    entrypoint: ['']
+  before_script:
+#    - PACKAGE_VERSION=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)
+#    - - echo $PACKAGE_VERSION
+  script:
+    - echo "Deploy to development on K8s cluster"
+#    - echo $PACKAGE_VERSION
+    - kubectl config use-context integrada/k8s-agent:integrada
+    - envsubst < k8s/development/deployment.yaml > k8s/development/deployment-replace.yaml
+    - kubectl apply -f k8s/development/deployment-replace.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/development/service.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/development/ingress.yaml --insecure-skip-tls-verify
+  only:
+    - development
+  environment:
+    name: Development
+    url: http://genesis-desenv.integrada.coop.br/
+
+deploy-staging:
+  stage: deploy
+  image:
+#    name: bitnami/kubectl:latest 
+    name: sa-saopaulo-1.ocir.io/grj9gtpq5dke/kubernetes-deploy:v1
+    entrypoint: ['']
+  before_script:
+#    - PACKAGE_VERSION=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)
+#    - - echo $PACKAGE_VERSION
+  script:
+    - echo "Deploy to staging on K8s cluster"
+#    - echo $PACKAGE_VERSION
+    - kubectl config use-context integrada/k8s-agent:integrada
+    - envsubst < k8s/staging/deployment.yaml > k8s/staging/deployment-replace.yaml
+    - kubectl apply -f k8s/staging/deployment-replace.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/staging/service.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/staging/ingress.yaml --insecure-skip-tls-verify
+  only:
+    - staging
+  environment:
+    name: Staging
+    url: http://genesis.integrada.coop.br/
+
+deploy-production:
+  stage: deploy
+  image:
+#    name: bitnami/kubectl:latest 
+    name: sa-saopaulo-1.ocir.io/grj9gtpq5dke/kubernetes-deploy:v1
+    entrypoint: ['']
+  before_script:
+#    - PACKAGE_VERSION=$(grep '"version"' package.json | cut -d '"' -f 4 | head -n 1)
+  script:
+    - echo "Deploy to production on K8s cluster"
+    - kubectl config use-context integrada/k8s-agent:integrada
+    - envsubst < k8s/production/deployment.yaml > k8s/production/deployment-replace.yaml
+    - kubectl apply -f k8s/production/deployment-replace.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/production/service.yaml --insecure-skip-tls-verify
+    - kubectl apply -f k8s/production/ingress.yaml --insecure-skip-tls-verify    
+  environment:
+    name: Production
+    url: http://genesisoriginacao.com.br/
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: manual
+  
+include:
+  - template: Security/SAST.gitlab-ci.yml
+    only:
+      - staging
+
+

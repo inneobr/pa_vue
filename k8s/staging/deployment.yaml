@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: genesis-staging
+  name: genesis-vue
+  labels:
+    app: genesis-vue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: genesis-vue
+  template:
+    metadata:
+      labels:
+        app: genesis-vue
+    spec:
+      containers:
+      - name: genesis-vue
+        image: sa-saopaulo-1.ocir.io/grj9gtpq5dke/genesis-vue:${CI_COMMIT_BRANCH}-${CI_PIPELINE_ID}
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: oc-integrada

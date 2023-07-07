@@ -1,0 +1,147 @@
+.justify-content{
+    text-align: justify;
+}
+
+.p-dropdown-trigger{
+    margin-left: 12px !important;
+    background-color:#03A9F4 !important;
+}
+
+.p-button {
+    box-shadow: 2px 2px 0 0 #e4e1e1;
+}
+
+.p-button:focus { 
+    box-shadow: 0 0 0 0 #e4e1e1;
+    transform: translate(1px, 2px);
+    transition: all 0.2s ease;
+}
+
+.p-row-editor-save{
+    color: #FFF !important;
+    font-size: 10px !important;
+    padding: 10px !important;
+    border-radius: 50%  !important;
+    background-color: #03A9F4!important;
+    box-shadow: 2px 2px 0 0 #e4e1e1!important;
+    transform: translate(1px, 2px);
+    transition: all 1s ease;
+
+}
+
+.p-row-editor-save:focus {
+    box-shadow: 0 0 0 0 #e4e1e1;
+    transform: translate(1px, 2px);
+    transition: all 1s ease;
+}
+
+.p-row-editor-cancel{
+    color: #FFF !important;;
+    font-size: 10px !important;
+    padding: 10px !important;
+    border-radius: 50% !important;
+    background-color: #D32F2F !important;
+    box-shadow: 2px 2px 0 0 #e4e1e1!important;
+    transform: translate(1px, 2px);
+    transition: all 1s ease;
+}
+
+.p-row-editor-cancel:focus {
+    box-shadow: 0 0 0 0 #e4e1e1;
+    transform: translate(1px, 2px);
+    transition: all 1s ease;
+}
+
+.p-row-editor-init{
+    color: #FFF !important;;
+    font-size: 10px !important;
+    background-color: #03A9F4 !important;
+    padding: 10px !important;
+    border-radius: 50% !important;
+}
+
+.border-panel-reset {
+    border: 1px solid #DCDCDC; 
+    border-radius: 6px; 
+    margin:  0;
+    padding: 0;
+}
+
+.form{
+    border: 1px solid #DCDCDC; 
+    border-radius: 6px;
+}
+
+.border-panel{
+    border: 1px solid #DCDCDC; 
+    border-radius: 6px; 
+    padding: 25px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.reset {
+    margin:  0;
+    padding: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+.warn {
+    color: #D32F2F;
+}
+
+.border-bottom {
+    border-bottom: Solid 1px rgb(192, 192, 192);
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.top-right-custom {
+    position: relative;
+    margin-top: -8px !important;
+}
+
+.margin-top-custom{
+    position: relative;
+    margin-top: -20px !important;
+}
+
+@media (max-width: 767px) {
+    .hidden-sm {
+        display: none !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .hidden-md {
+        display: none !important;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .hidden-lg {
+        display: none !important;
+    }
+}
+@media (min-width: 1200px) {
+    .hidden-xl {
+        display: none !important;
+    }
+}
+
+.p-row-editor-init {
+    margin-left: -80px !important;
+    margin-top: -5px;
+}
